@@ -6,6 +6,15 @@ def reverse_complement(seq: str): -> rev_comp_str: str
     return rev_seq
 Input: 'AATAA'
 Expected Output: 'TTATT'
+
+def meets_qscore_cutoff(seq: str, cutoff: float): -> bool
+    '''Function that takes a sequence, in this case of phred quality scores,
+        and returns True if each score in the sequence meets the given cutoff, False if not'''
+    For each char in seq, call bioinfo.convert_phred and compare the converted score to the given cutoff. If any of them are less than the cutoff, return False. If you get to the end of the string, return True.
+Input: seq: 'AAAEEE', cutoff: 25.0
+Expected Output: True
+
+def write_record(file: fileheader
 ```
 
 create dictionary of all swapped and matching known-index pairs (576 total):
@@ -35,7 +44,7 @@ def demultiplex(R1: str, R2: str, R3: str, R4: str, qscore_cutoff: int) -> unkno
         5. If 'r2index-rev_comp_r3index' not in dictionary of known index pairs, write associated reads from R1 and R4 to 'unknownR1' and 'unknownR4' output files with indexes appended to the header line. Increment unknown count.
 
         6. Else, 
-            if any of the quality scores of the index do not meet the user-defined cutoff, write the associated reads from R1 and R4 to 'unknownR1' and 'unknownR4' output files with indexes appended to the header line. Increment unknown count.
+            if meets_qscore_cutoff returns False, write the associated reads from R1 and R4 to 'unknownR1' and 'unknownR4' output files with indexes appended to the header line. Increment unknown count.
 
             7. Else, increment count of 'index from R2-reverse complement' position in the dictionary. 
 
