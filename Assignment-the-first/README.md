@@ -39,6 +39,8 @@ Please fill in your answers on [Answers.md](Answers.md)
     2.	What is a good quality score cutoff for index reads and biological read pairs to utilize for sample identification and downstream analysis, respectively? Justify your answer.
     3.	How many indexes have undetermined (N) base calls? (Utilize your command line tool knowledge. Submit the command(s) you used. CHALLENGE: use a one-line command)
 
+    ANSWERS TO PART 1 QUESTIONS ARE IN LAB NOTEBOOK
+
 ## Part 2 – Develop an algorithm to de-multiplex the samples
 Write up a strategy (**NOT A SCRIPT**) for writing an algorithm to de-multiplex files and reporting index-hopping. That is, given four input FASTQ files (2 with biological reads, 2 with index reads) and the 24 known indexes above, demultiplex reads by index-pair, outputting:
 
