@@ -71,3 +71,5 @@ Here are the /usr/bin/time results from the sbatch jobs:
 | run_R2_dist.sh | 15:05.23 | 99% | 79.636 MB | 0 |
 | run_R3_dist.sh | 15:09.41 | 99% | 79.332 MB | 0 |
 | run_R4_dist.sh | 3:30:53 | 99% | 83.636 MB | 0 | 
+
+After the results, the barcodes and sequences both have the lowest quality at the beginning. This aligns with what I saw previously in the initial data analysis when looking at the number of barcodes that start with an N vs the ones that just have an N anywhere - most of them that had an N it was in the first position. I think a good quality score cutoff for the indexes would be 30, since this still covers the average quality score in the first 2 positions, but it will get rid of reads that began with an N. I think it should also be 30 for the sequences for similar reasons. The worst quality scores are at the beginning of the sequence, and 30 still incorporates the average seen at those positions while cutting off anything with a higher error rate. 
