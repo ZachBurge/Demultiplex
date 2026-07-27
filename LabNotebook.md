@@ -70,4 +70,4 @@ Here are the /usr/bin/time results from the sbatch jobs:
 | run_R1_dist.sh | 2:14:42 | 99% | 81.052 MB | 0 |
 | run_R2_dist.sh | 15:05.23 | 99% | 79.636 MB | 0 |
 | run_R3_dist.sh | 15:09.41 | 99% | 79.332 MB | 0 |
-| run_R4_dist.sh |  |  |  |  | 
+| run_R4_dist.sh | 3:30:53 | 99% | 83.636 MB | 0 | 
