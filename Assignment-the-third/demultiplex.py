@@ -50,7 +50,7 @@ output_files["R4-hopped"] = open("/scratch/bgmp/zburge/demux/R4-hopped.fastq", "
 output_files["R1-unknown"] = open("/scratch/bgmp/zburge/demux/R1-unknown.fastq", "w")
 output_files["R4-unknown"] = open("/scratch/bgmp/zburge/demux/R4-unknown.fastq", "w")
 
-# caching the output file dictionary lookups to reference within the loop
+# caching the output file dictionary lookups to reference within the loop, saves a little time
 R1_hopped = output_files["R1-hopped"]
 R4_hopped = output_files["R4-hopped"]
 R1_unknown = output_files["R1-unknown"]
@@ -148,10 +148,10 @@ with open("demux_report.txt", "w") as out:
     out.write(F"Total Hopped: {hopped}\n")
     out.write(f"Total Unknown: {unknown}\n")
 
-plt.figure(figsize=(10,8))
-sns.heatmap(heatmap, norm=LogNorm(), xticklabels=known_indexes, yticklabels=known_indexes, cmap="viridis")
+plt.figure(figsize=(10,8)) # slightly bigger than default
+sns.heatmap(heatmap, norm=LogNorm(), xticklabels=known_indexes, yticklabels=known_indexes, cmap="viridis") # LogNorm because the values on the diagonal are much higher than any others, so without it the graph colors would look weird
 plt.xlabel("Forward indexes")
 plt.ylabel("Reverse indexes (rev comp)")
 plt.title("Matched and Hopped Index Pair Counts")
 
-plt.savefig("index_counts_heatmap.png", dpi=300)
+plt.savefig("index_counts_heatmap.png", dpi=300) # dpi = pixels per inch, default is 100
