@@ -21,7 +21,14 @@ def meets_qscore_cutoff(seq: str, cutoff: float):
     return all(ord(b) >= limit for b in seq)
 
 def get_args():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="This script demultiplexes data with 24 different barcodes from a single Illumina sequencing run. \
+                                     It tracks which reads had matching barcodes in the forward and reverse reads, which had hopped indexes, \
+                                     and which indexes were unknown. It provides a text file with the resulting distribution of these counts, \
+                                     as well as renders a heatmap of the known index pair combinations (matched and hopped) and their respective counts. \
+                                     This heatmap is generated using seaborn, and the seaborn documentation referenced in this script can be found here: \
+                                     https://seaborn.pydata.org/generated/seaborn.heatmap.html \
+                                     https://seaborn.pydata.org/tutorial/color_palettes.html \
+                                     https://matplotlib.org/stable/api/_as_gen/matplotlib.colors.LogNorm.html")
     parser.add_argument("-c", "--cutoff", help="the quality score cutoff")
     return parser.parse_args()
 
@@ -68,7 +75,7 @@ R4 = "/projects/bgmp/shared/2017_sequencing/1294_S1_L008_R4_001.fastq.gz"
 
 record_num = 0 # counter to track how many records have been read
 with gzip.open(R1, "rt") as R1, gzip.open(R2, "rt") as R2, gzip.open(R3, "rt") as R3, gzip.open(R4, "rt") as R4:
-# with open(R1, "rt") as R1, open(R2, "rt") as R2, open(R3, "rt") as R3, open(R4, "rt") as R4:
+# with open(R1, "rt") as R1, open(R2, "rt") as R2, open(R3, "rt") as R3, open(R4, "rt") as R4: for test files
     while True:
         R1_header = R1.readline().strip()
         if R1_header == '':
@@ -132,10 +139,13 @@ for k, v in output_files.items():
 matched = hopped = 0
 heatmap = np.zeros((len(known_indexes), len(known_indexes)), dtype=int) # create empty 2D array for heatmap axes
 indexes_to_heatmap = {index: i for i, index in enumerate(known_indexes)} # initialize empty dict for getting index coordinates on heatmap
-with open("demux_report.txt", "w") as out:
-    out.write("Index Pair\tCount\n")
+with open("demux_report.md", "w") as out:
+    out.write("## Demultiplex Results\n")
+    out.write("### Index-Pair Distribution\n")
+    out.write("| Index Pair | Count |\n")
+    out.write("| ---------- | ----- |\n")
     for pair, count in known_index_pairs.items():
-        out.write(f"{pair}\t{count}\n")
+        out.write(f"| {pair} | {count} |\n")
         r2, r3 = pair.split('-')
         row_val = indexes_to_heatmap[r2] # x coordinate of heatmap
         col_val = indexes_to_heatmap[r3] # y coordinate of heatmap
@@ -144,9 +154,13 @@ with open("demux_report.txt", "w") as out:
             matched += count
         else:
             hopped += count
-    out.write(f"Total Matched: {matched}\n")
-    out.write(F"Total Hopped: {hopped}\n")
-    out.write(f"Total Unknown: {unknown}\n")
+    out.write("\n")
+    out.write("### Total Counts\n")
+    out.write("| Category | Total Count |\n")
+    out.write("| -------- | ----------- |\n")
+    out.write(f"| Matched | {matched} |\n")
+    out.write(f"| Hopped  | {hopped} |\n")
+    out.write(f"| Unknown | {unknown} |\n")
 
 plt.figure(figsize=(10,8)) # slightly bigger than default
 sns.heatmap(heatmap, norm=LogNorm(), xticklabels=known_indexes, yticklabels=known_indexes, cmap="viridis") # LogNorm because the values on the diagonal are much higher than any others, so without it the graph colors would look weird
