@@ -154,4 +154,4 @@ plt.xlabel("Forward indexes")
 plt.ylabel("Reverse indexes (rev comp)")
 plt.title("Matched and Hopped Index Pair Counts")
 
-plt.save_fig("index_counts_heatmap.png")
+plt.savefig("index_counts_heatmap.png")
