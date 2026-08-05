@@ -49,13 +49,13 @@ for i in itertools.product(known_indexes, repeat=2): # all possible pair combina
     pair = f"{i[0]}-{i[1]}"
     known_index_pairs[pair] = 0 # initialize each pair, matching and non matching
     if i[0] == i[1]: # when they are matching, need to create an output file
-        output_files[f"R1-{pair}"] = open(f"/scratch/bgmp/zburge/demux/R1-{pair}.fastq", "w")
-        output_files[f"R4-{pair}"] = open(f"/scratch/bgmp/zburge/demux/R4-{pair}.fastq", "w")
+        output_files[f"R1-{pair}"] = open(f"/scratch/bgmp/zburge/demux/cutoff-{cutoff}/R1-{pair}.fastq", "w")
+        output_files[f"R4-{pair}"] = open(f"/scratch/bgmp/zburge/demux/cutoff-{cutoff}/R4-{pair}.fastq", "w")
 # create the hopped and unknown output files
-output_files["R1-hopped"] = open("/scratch/bgmp/zburge/demux/R1-hopped.fastq", "w")
-output_files["R4-hopped"] = open("/scratch/bgmp/zburge/demux/R4-hopped.fastq", "w")
-output_files["R1-unknown"] = open("/scratch/bgmp/zburge/demux/R1-unknown.fastq", "w")
-output_files["R4-unknown"] = open("/scratch/bgmp/zburge/demux/R4-unknown.fastq", "w")
+output_files["R1-hopped"] = open(f"/scratch/bgmp/zburge/demux/cutoff-{cutoff}/R1-hopped.fastq", "w")
+output_files["R4-hopped"] = open(f"/scratch/bgmp/zburge/demux/cutoff-{cutoff}/R4-hopped.fastq", "w")
+output_files["R1-unknown"] = open(f"/scratch/bgmp/zburge/demux/cutoff-{cutoff}/R1-unknown.fastq", "w")
+output_files["R4-unknown"] = open(f"/scratch/bgmp/zburge/demux/cutoff-{cutoff}/R4-unknown.fastq", "w")
 
 # caching the output file dictionary lookups to reference within the loop, saves a little time
 R1_hopped = output_files["R1-hopped"]
@@ -139,8 +139,8 @@ for k, v in output_files.items():
 matched = hopped = 0
 heatmap = np.zeros((len(known_indexes), len(known_indexes)), dtype=int) # create empty 2D array for heatmap axes
 indexes_to_heatmap = {index: i for i, index in enumerate(known_indexes)} # initialize empty dict for getting index coordinates on heatmap
-with open("demux_report.md", "w") as out:
-    out.write("## Demultiplex Results\n")
+with open(f"cutoff_{cutoff}_demux_report.md", "w") as out:
+    out.write(f"## Demultiplex Results (Cutoff = {cutoff})\n")
     out.write("### Index-Pair Distribution\n")
     out.write("| Index Pair | Count |\n")
     out.write("| ---------- | ----- |\n")
@@ -166,6 +166,6 @@ plt.figure(figsize=(10,8)) # slightly bigger than default
 sns.heatmap(heatmap, norm=LogNorm(), xticklabels=known_indexes, yticklabels=known_indexes, cmap="viridis") # LogNorm because the values on the diagonal are much higher than any others, so without it the graph colors would look weird
 plt.xlabel("Forward indexes")
 plt.ylabel("Reverse indexes (rev comp)")
-plt.title("Matched and Hopped Index Pair Counts")
+plt.title(f"Matched and Hopped Index Pair Counts (Cutoff = {cutoff})")
 
-plt.savefig("index_counts_heatmap.png", dpi=300) # dpi = pixels per inch, default is 100
+plt.savefig(f"cutoff_{cutoff}_index_counts_heatmap.png", dpi=300) # dpi = pixels per inch, default is 100
