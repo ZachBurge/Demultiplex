@@ -142,10 +142,11 @@ indexes_to_heatmap = {index: i for i, index in enumerate(known_indexes)} # initi
 with open(f"cutoff_{cutoff}_demux_report.md", "w") as out:
     out.write(f"## Demultiplex Results (Cutoff = {cutoff})\n")
     out.write("### Index-Pair Distribution\n")
-    out.write("| Index Pair | Count |\n")
-    out.write("| ---------- | ----- |\n")
+    out.write("| Index Pair | Count | Percent of Total |\n")
+    out.write("| ---------- | ----- | ---------------- |\n")
     for pair, count in known_index_pairs.items():
-        out.write(f"| {pair} | {count} |\n")
+        percentage = (count / 363246735) * 100
+        out.write(f"| {pair} | {count} | {percentage}% |\n")
         r2, r3 = pair.split('-')
         row_val = indexes_to_heatmap[r2] # x coordinate of heatmap
         col_val = indexes_to_heatmap[r3] # y coordinate of heatmap
@@ -154,13 +155,16 @@ with open(f"cutoff_{cutoff}_demux_report.md", "w") as out:
             matched += count
         else:
             hopped += count
+    matched_percent = (matched / 363246735) * 100
+    hopped_percent = (hopped / 363246735) * 100
+    unknown_percent = (unknown / 363246735) * 100
     out.write("\n")
     out.write("### Total Counts\n")
-    out.write("| Category | Total Count |\n")
-    out.write("| -------- | ----------- |\n")
-    out.write(f"| Matched | {matched} |\n")
-    out.write(f"| Hopped  | {hopped} |\n")
-    out.write(f"| Unknown | {unknown} |\n")
+    out.write("| Category | Total Count | Percent of Total |\n")
+    out.write("| -------- | ----------- | ---------------- |\n")
+    out.write(f"| Matched | {matched} | {matched_percent}% |\n")
+    out.write(f"| Hopped  | {hopped} | {hopped_percent}% |\n")
+    out.write(f"| Unknown | {unknown} | {unknown_percent}% |\n")
 
 plt.figure(figsize=(10,8)) # slightly bigger than default
 sns.heatmap(heatmap, norm=LogNorm(), xticklabels=known_indexes, yticklabels=known_indexes, cmap="viridis") # LogNorm because the values on the diagonal are much higher than any others, so without it the graph colors would look weird
